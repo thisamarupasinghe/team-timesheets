@@ -80,11 +80,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Record
               {(M.hiddenInactive > 0 || showInactive) && (
                 <Link className="btn" href={`/?${P.query}${team ? `&team=${encodeURIComponent(team)}` : ""}${showInactive ? "" : "&inactive=1"}`}>{showInactive ? "Hide inactive" : `Show inactive (${M.hiddenInactive})`}</Link>
               )}
-              <a className="btn" href={`/api/export?from=${P.start}&to=${P.end}&type=daily`}>Export timesheet CSV</a>
-              <a className="btn" href={`/api/export?from=${P.start}&to=${P.end}&type=logs`}>Export worklogs CSV</a>
+              <a className="btn exp" href={`/api/export?from=${P.start}&to=${P.end}&type=daily`}>Export timesheet CSV</a>
+              <a className="btn exp" href={`/api/export?from=${P.start}&to=${P.end}&type=logs`}>Export worklogs CSV</a>
             </div>
           </div>
-          <div className="panel-h" style={{ borderBottomColor: "var(--line-2)" }}>
+          <div className="panel-h keyrow" style={{ borderBottomColor: "var(--line-2)" }}>
             <div className="legend">
               <span><i className="sw" style={{ background: "var(--gap)" }} />Working day, nothing logged</span>
               <span><i className="sw" style={{ background: "var(--leave)" }} />Leave</span>

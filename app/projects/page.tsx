@@ -37,11 +37,11 @@ export default async function Projects({ searchParams }: { searchParams: Record<
                   const top = v.people.sort((a, b) => b.secs - a.secs).slice(0, 4);
                   return (
                     <tr key={name}>
-                      <td><b>{name}</b></td>
-                      <td><div className="track"><i style={{ width: `${(v.secs / max) * 100}%` }} /></div></td>
-                      <td className="r num">{hm(v.secs)}</td>
-                      <td className="r num">{v.people.length}</td>
-                      <td style={{ fontSize: 12 }}>{top.map((p) => `${p.name} ${hm(p.secs)}`).join(" · ")}</td>
+                      <td className="pj-n"><b>{name}</b></td>
+                      <td className="pj-bar"><div className="track"><i style={{ width: `${(v.secs / max) * 100}%` }} /></div></td>
+                      <td className="r num pj-h"><span className="lbl-m">Hours </span><b>{hm(v.secs)}</b></td>
+                      <td className="r num pj-p"><span className="lbl-m">People </span>{v.people.length}</td>
+                      <td className="pj-top" style={{ fontSize: 12 }}>{top.map((p) => `${p.name} ${hm(p.secs)}`).join(" · ")}</td>
                     </tr>
                   );
                 })}

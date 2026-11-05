@@ -10,6 +10,20 @@ import ThemeToggle from "./ThemeToggle";
 
 type Active = "dash" | "projects" | "mine" | "unmatched" | "admin" | "activity" | "bin" | "person";
 
+const ICONS: Record<string, string> = {
+  dash: "M3 5h18v15H3zM3 10h18M8 3v4M16 3v4",
+  projects: "M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z",
+  mine: "M4 5h16v15H4zM4 10h16M9 15h6",
+  unmatched: "M9 15l6-6M10 6l1-1a4 4 0 0 1 6 6l-1 1M14 18l-1 1a4 4 0 0 1-6-6l1-1",
+  admin: "M16 19v-1a4 4 0 0 0-8 0v1M12 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM20 19v-1a3 3 0 0 0-2-2.8M17 5.2a3 3 0 0 1 0 5.6",
+  bin: "M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13",
+  activity: "M4 6h16M4 12h16M4 18h10",
+  more: "M5 12h.01M12 12h.01M19 12h.01",
+};
+const Icon = ({ k }: { k: string }) => (
+  <svg className="tic" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><path d={ICONS[k]} /></svg>
+);
+
 export default async function Header({ active, period, base = "/" }: { active: Active; period?: Period; base?: string }) {
   const modes = [["sprint", "Sprint"], ["week", "Week"], ["month", "Month"]] as const;
   const join = (b: string, q: string) => (b.includes("?") ? `${b}&${q.slice(1)}` : b + q);
@@ -28,6 +42,9 @@ export default async function Header({ active, period, base = "/" }: { active: A
     ["bin", "Recycle bin", "/bin", editor],
     ["activity", "Activity", "/activity", admin],
   ];
+  const shown = tabs.filter((t) => t[3]);
+  const isOn = (k: Active) => active === k || (k === "dash" && active === "person" && !own) || (k === "mine" && active === "person" && !!own);
+  const primary = shown.length <= 5 ? shown : shown.slice(0, 4), extra = shown.length <= 5 ? [] : shown.slice(4);
   return (
     <header className="bar">
       <div className="wrap">
@@ -62,9 +79,22 @@ export default async function Header({ active, period, base = "/" }: { active: A
         {user && process.env.DEMO !== "1" && <SignOutButton />}
       </div>
       <nav className="tabs wrap" aria-label="Sections">
-        {tabs.filter((t) => t[3]).map(([k, label, href]) => (
-          <Link key={k} href={href} className={active === k || (k === "dash" && active === "person" && !own) || (k === "mine" && active === "person" && !!own) ? "on" : ""}>{label}</Link>
+        {shown.map(([k, label, href]) => (
+          <Link key={k} href={href} className={isOn(k) ? "on" : ""} aria-current={isOn(k) ? "page" : undefined}>{label}</Link>
         ))}
+      </nav>
+      <nav className="bnav" aria-label="Sections">
+        {primary.map(([k, label, href]) => (
+          <Link key={k} href={href} className={isOn(k) ? "on" : ""} aria-current={isOn(k) ? "page" : undefined}><Icon k={k} /><span>{label}</span></Link>
+        ))}
+        {extra.length > 0 && (
+          <details className={`bmore${extra.some(([k]) => isOn(k)) ? " on" : ""}`}>
+            <summary><Icon k="more" /><span>More</span></summary>
+            <div className="bsheet">
+              {extra.map(([k, label, href]) => <Link key={k} href={href} className={isOn(k) ? "on" : ""}><Icon k={k} /><span>{label}</span></Link>)}
+            </div>
+          </details>
+        )}
       </nav>
     </header>
   );

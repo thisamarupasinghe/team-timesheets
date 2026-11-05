@@ -23,8 +23,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" />
       </head>
       <body>
-        {children}
         {demoMode && <div className="demobar">Live demo with fictional data. Read-only. <a href="https://github.com/thisamarupasinghe/team-timesheets" target="_blank" rel="noopener noreferrer">View the source</a></div>}
+        {children}
         {user && !demoMode && !user.email.startsWith("local-dev") && <IdleGuard />}
         {canEdit(user?.role) && <ContextMenu />}
       </body>
