@@ -1,18 +1,21 @@
 "use client";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
+import { CalendarDays, Trash2 } from "lucide-react";
+import { usePersonActions, type PersonRef } from "./PersonActions";
 
-type Target = { id: number; name: string; active: boolean; x: number; y: number };
+type Target = PersonRef & { x: number; y: number };
 
-/** Right-click (or press and hold) any row marked data-eid to delete that person. */
+/**
+ * Shortcut: right-click (or press and hold on a phone) any row marked data-eid for the same actions
+ * as its visible "⋯" menu.
+ */
 export default function ContextMenu() {
-  const router = useRouter();
   const [t, setT] = useState<Target | null>(null);
-  const [confirm, setConfirm] = useState(false);
-  const [toast, setToast] = useState<string | null>(null);
   const press = useRef<number | undefined>(undefined);
   const lastPress = useRef(0);
   const menu = useRef<HTMLDivElement>(null);
+  const { dialog, setDeleting } = usePersonActions();
 
   useEffect(() => {
     const find = (el: EventTarget | null) => {
@@ -22,7 +25,6 @@ export default function ContextMenu() {
     const open = (el: EventTarget | null, x: number, y: number) => {
       const f = find(el);
       if (!f) return false;
-      setConfirm(false);
       setT({ ...f, x: Math.min(x, window.innerWidth - 230), y: Math.min(y, window.innerHeight - 150) });
       return true;
     };
@@ -37,44 +39,36 @@ export default function ContextMenu() {
       if (!menu.current?.contains(e.target as Node)) setT(null);
     };
     const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") setT(null); };
+    const onScroll = () => setT(null);
     document.addEventListener("contextmenu", onCtx);
     document.addEventListener("touchstart", onStart, { passive: true });
     ["touchend", "touchmove", "touchcancel"].forEach((n) => document.addEventListener(n, cancel, { passive: true }));
     document.addEventListener("click", onClick, true);
     document.addEventListener("keydown", onKey);
-    window.addEventListener("scroll", () => setT(null), { passive: true });
+    window.addEventListener("scroll", onScroll, { passive: true, capture: true });
     return () => {
       document.removeEventListener("contextmenu", onCtx);
       document.removeEventListener("touchstart", onStart);
       ["touchend", "touchmove", "touchcancel"].forEach((n) => document.removeEventListener(n, cancel));
       document.removeEventListener("click", onClick, true);
       document.removeEventListener("keydown", onKey);
+      window.removeEventListener("scroll", onScroll, { capture: true });
     };
   }, []);
 
-  useEffect(() => { if (t) menu.current?.querySelector("button")?.focus(); }, [t]);
-  const say = (s: string) => { setToast(s); window.setTimeout(() => setToast(null), 3000); };
-
-  async function act(body: object, done: string) {
-    setT(null);
-    const r = await fetch("/api/people", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
-    say(r.ok ? done : "Couldn't save that change");
-    router.refresh();
-  }
+  useEffect(() => { if (t) menu.current?.querySelector<HTMLElement>("[role=menuitem]")?.focus(); }, [t]);
 
   return (
     <>
       {t && (
-        <div id="ctx" ref={menu} role="menu" style={{ left: Math.max(8, t.x), top: Math.max(8, t.y) }}>
-          <div className="who">{t.name}</div>
-          {confirm ? (
-            <button role="menuitem" className="del" onClick={() => act({ action: "delete", id: t.id }, `Deleted ${t.name}`)}>Click again to delete</button>
-          ) : (
-            <button role="menuitem" className="del" onClick={() => setConfirm(true)}>Delete person</button>
-          )}
+        <div className="menu" ref={menu} role="menu" aria-label={`Actions for ${t.name}`} style={{ position: "fixed", left: Math.max(8, t.x), top: Math.max(8, t.y) }}>
+          <div className="menu-label">{t.name}</div>
+          <Link role="menuitem" className="menu-item" href={`/person?id=${t.id}`} onClick={() => setT(null)}><CalendarDays />View timesheet</Link>
+          <div className="menu-sep" />
+          <button role="menuitem" className="menu-item danger" onClick={() => { setT(null); setDeleting(t); }}><Trash2 />Delete person</button>
         </div>
       )}
-      {toast && <div className="toast" role="status">{toast}</div>}
+      {dialog}
     </>
   );
 }

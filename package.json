@@ -4,22 +4,26 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/migrate.mjs --if-production && next build",
     "start": "next start",
-    "db:setup": "node scripts/migrate.mjs",
-    "db:seed": "node scripts/migrate.mjs --seed"
+    "db:migrate": "node --env-file-if-exists=.env.local scripts/migrate.mjs",
+    "db:setup": "node --env-file-if-exists=.env.local scripts/migrate.mjs",
+    "db:seed": "node --env-file-if-exists=.env.local scripts/migrate.mjs --seed",
+    "db:demo": "node --env-file-if-exists=.env.local scripts/migrate.mjs --seed --demo",
+    "gen:sql": "node scripts/gen-sql.mjs"
   },
   "dependencies": {
-    "next": "14.2.35",
-    "next-auth": "4.24.8",
+    "lucide-react": "0.460.0",
+    "next": "16.4.5",
+    "next-auth": "4.24.15",
     "postgres": "3.4.4",
-    "react": "18.3.1",
-    "react-dom": "18.3.1"
+    "react": "19.3.1",
+    "react-dom": "19.3.1"
   },
   "devDependencies": {
     "@types/node": "20.14.10",
-    "@types/react": "18.3.3",
-    "@types/react-dom": "18.3.0",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
     "typescript": "5.5.4"
   }
 }

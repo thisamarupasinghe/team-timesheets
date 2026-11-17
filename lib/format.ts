@@ -21,5 +21,14 @@ export function band(p: number | null) {
   return b;
 }
 
-export const COUNTED = ["Alpha", "Bravo", "Charlie"];
-export const ALL_TEAMS = [...COUNTED, "Support", "Other"];
+export const COUNTED = ["Alpha", "Bravo", "Charlie", "Delta", "Echo"];
+export const ALL_TEAMS = [...COUNTED, "Platform", "Studio", "Group", "Finance", "HR", "Other"];
+
+const MON3 = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+/** Rewrites ISO dates inside free text ("2026-11-02 to 2026-11-04") as "2 Nov 2026 to 4 Nov 2026". */
+export const humanDates = (s: string) =>
+  s.replace(/\b(\d{4})-(\d{2})-(\d{2})\b/g, (m, y, mo, d) => (+mo >= 1 && +mo <= 12 ? `${+d} ${MON3[+mo - 1]} ${y}` : m));
+
+/** More than this in one day is almost certainly a week booked against a single date: flag it for checking in Jira. */
+export const OVER_DAY_SECS = 12 * 3600;
+export const isOverDay = (secs: number) => secs > OVER_DAY_SECS;

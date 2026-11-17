@@ -1,0 +1,150 @@
+/* ==========================================================================
+   Design tokens. Every colour, size and motion value in the app comes from here.
+   Light is the default; dark applies via [data-theme="dark"] (set before paint by
+   the script in app/layout.tsx) or, without JS, via prefers-color-scheme.
+   ========================================================================== */
+:root {
+  /* Surfaces */
+  --bg: #f2f7f8;
+  --surface: #ffffff;
+  --surface-2: #eef5f6;
+  --surface-3: #e2eef0;
+  --surface-hover: #f0f7f8;
+  --overlay: rgba(10, 22, 26, 0.42);
+
+  /* Lines */
+  --border: #dae7e9;
+  --border-strong: #c3d5d8;
+
+  /* Text: near-black, neutral steps (no grey-on-grey). Every step >= 7:1 on --surface and --surface-2 */
+  --fg: #0b0f12;
+  --fg-2: #1b2328;
+  --muted: #333d42;
+  --faint: #485359;
+
+  /* Brand: Brand teal, taken from the sign-in screen (#1a9aa2 / #4fc4cb / #7fe0e6 on #06191c) */
+  --accent: #0e7880;
+  --accent-hover: #0a5f66;
+  --accent-fg: #ffffff;
+  --accent-soft: #e0f5f6;
+  --accent-soft-2: #bfe9ec;
+  --accent-ink: #085257;
+  --accent-bright: #1a9aa2;
+  --ring: rgba(26, 154, 162, 0.4);
+
+  /* Sidebar: the sign-in screen's deep teal, in light mode too */
+  --sb-bg: linear-gradient(180deg, #0b2a2e 0%, #06191c 55%, #041114 100%);
+  --sb-fg: #ecf8f9;
+  --sb-text: #c2dee1;
+  --sb-muted: #8fb3b7;
+  --sb-hover: rgba(127, 224, 230, 0.09);
+  --sb-active-bg: rgba(79, 196, 203, 0.18);
+  --sb-active-fg: #8fe6eb;
+  --sb-accent: #4fc4cb;
+  --sb-border: rgba(127, 224, 230, 0.12);
+
+  /* Semantic */
+  --success: #067647; --success-bg: #e6f5ec; --success-line: #a7dcbf;
+  --warning: #a64a07; --warning-bg: #fdf1e3; --warning-line: #f3c896;
+  --danger: #b42318;  --danger-bg: #fdecea;  --danger-line: #f4b3ad;
+  --info: #2b5b93;    --info-bg: #e9f1fa;    --info-line: #b5cdea;
+
+  /* Utilisation bands (used by lib/format.ts band(): b0..b4, na) */
+  --b0: #b42318; --b0-bg: #fdecea;
+  --b1: #a64a07; --b1-bg: #fdf1e3;
+  --b2: #7a6a00; --b2-bg: #f7f2d4;
+  --b3: #067647; --b3-bg: #e6f5ec;
+  --b4: #5b3fa8; --b4-bg: #efe9fb;
+
+  /* Calendar states */
+  --weekend: #f3f6f7;
+  --gap: #f7e4e8; --gap-ink: #8a1c30; /* still to log: cherry-cola burgundy */
+  --leave: #eee8fb; --leave-ink: #5b3fa8;
+  --hol: #e7f0fa; --hol-ink: #2b5b93;
+
+  /* Hours heat (share of a full day) */
+  --heat-1: #e3f6f7; --heat-2: #bfeaec; --heat-3: #8fd8dc; --heat-4: #5cc6cd;
+
+  /* Team series */
+  --team-1: #1a9aa2; --team-2: #d97706; --team-3: #7c5cd6; --team-4: #2f9e6b; --team-5: #d1497a;
+
+  /* Type */
+  --font-sans: var(--font-instrument), "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: var(--font-plex), "IBM Plex Mono", ui-monospace, Menlo, monospace;
+  --text-xs: 12px; --text-sm: 13px; --text-md: 14px; --text-lg: 16px;
+  --text-xl: 20px; --text-2xl: 24px; --text-3xl: 30px;
+
+  /* Space (4px grid) */
+  --s-1: 4px; --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 20px; --s-6: 24px; --s-8: 32px; --s-10: 40px; --s-12: 48px;
+
+  /* Shape */
+  --r-sm: 6px; --r: 10px; --r-lg: 14px; --r-full: 999px;
+
+  /* Elevation */
+  --sh-xs: 0 1px 2px rgba(16, 32, 38, 0.05);
+  --sh-sm: 0 1px 3px rgba(16, 32, 38, 0.07), 0 1px 2px rgba(16, 32, 38, 0.04);
+  --sh-md: 0 6px 16px -4px rgba(16, 32, 38, 0.1), 0 2px 4px -2px rgba(16, 32, 38, 0.05);
+  --sh-lg: 0 24px 48px -12px rgba(16, 32, 38, 0.22), 0 6px 14px -6px rgba(16, 32, 38, 0.1);
+
+  /* Motion */
+  --dur-fast: 120ms; --dur: 180ms; --dur-slow: 260ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  /* Layers */
+  --z-sticky: 5; --z-sidebar: 20; --z-popover: 40; --z-modal: 60; --z-toast: 80;
+
+  /* Layout */
+  --sb-w: 248px;
+  --topbar-h: 56px;
+
+  color-scheme: light;
+}
+
+/* Dark: values duplicated for the no-JS media query and for the explicit choice */
+:root[data-theme="dark"] {
+  --bg: #041114; --surface: #0a1d20; --surface-2: #0e2528; --surface-3: #143034; --surface-hover: #10292c;
+  --overlay: rgba(0, 0, 0, 0.6);
+  --border: #173538; --border-strong: #22474b;
+  --fg: #e7eff1; --fg-2: #c6d3d7; --muted: #97a9af; --faint: #7d9197;
+  --accent: #4fc4cb; --accent-hover: #7fe0e6; --accent-fg: #06191c; --accent-soft: #0f3539; --accent-soft-2: #164a4f; --accent-ink: #8fe6eb;
+  --ring: rgba(79, 196, 203, 0.45);
+  --success: #5fd39a; --success-bg: #10301f; --success-line: #1f5a3c;
+  --warning: #f2a65e; --warning-bg: #36240f; --warning-line: #6a4519;
+  --danger: #f38b82;  --danger-bg: #3a1916;  --danger-line: #6e2c26;
+  --info: #8fb8ea;    --info-bg: #15243a;    --info-line: #2a4568;
+  --b0: #f38b82; --b0-bg: #3a1916; --b1: #f2a65e; --b1-bg: #36240f; --b2: #e3cf5a; --b2-bg: #302b10;
+  --b3: #5fd39a; --b3-bg: #10301f; --b4: #c4b2f5; --b4-bg: #2a2340;
+  --weekend: #071719; --gap: #4a1d28; --gap-ink: #f4a6b4; --leave: #272040; --leave-ink: #c4b2f5; --hol: #172840; --hol-ink: #8fb8ea;
+  --heat-1: #0f3236; --heat-2: #144a50; --heat-3: #1a6870; --heat-4: #2a9da5;
+  --team-1: #4fc4cb; --team-2: #f2a65e; --team-3: #b4a0f5; --team-4: #5fd39a; --team-5: #f08aa6;
+  --sh-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+  --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.2);
+  --sh-md: 0 8px 20px -6px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+  --sh-lg: 0 28px 56px -12px rgba(0, 0, 0, 0.65), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #041114; --surface: #0a1d20; --surface-2: #0e2528; --surface-3: #143034; --surface-hover: #10292c;
+    --overlay: rgba(0, 0, 0, 0.6);
+    --border: #173538; --border-strong: #22474b;
+    --fg: #e7eff1; --fg-2: #c6d3d7; --muted: #97a9af; --faint: #7d9197;
+    --accent: #4fc4cb; --accent-hover: #7fe0e6; --accent-fg: #06191c; --accent-soft: #0f3539; --accent-soft-2: #164a4f; --accent-ink: #8fe6eb;
+    --ring: rgba(79, 196, 203, 0.45);
+    --success: #5fd39a; --success-bg: #10301f; --success-line: #1f5a3c;
+    --warning: #f2a65e; --warning-bg: #36240f; --warning-line: #6a4519;
+    --danger: #f38b82;  --danger-bg: #3a1916;  --danger-line: #6e2c26;
+    --info: #8fb8ea;    --info-bg: #15243a;    --info-line: #2a4568;
+    --b0: #f38b82; --b0-bg: #3a1916; --b1: #f2a65e; --b1-bg: #36240f; --b2: #e3cf5a; --b2-bg: #302b10;
+    --b3: #5fd39a; --b3-bg: #10301f; --b4: #c4b2f5; --b4-bg: #2a2340;
+    --weekend: #071719; --gap: #4a1d28; --gap-ink: #f4a6b4; --leave: #272040; --leave-ink: #c4b2f5; --hol: #172840; --hol-ink: #8fb8ea;
+    --heat-1: #0f3236; --heat-2: #144a50; --heat-3: #1a6870; --heat-4: #2a9da5;
+    --team-1: #4fc4cb; --team-2: #f2a65e; --team-3: #b4a0f5; --team-4: #5fd39a; --team-5: #f08aa6;
+    --sh-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
+    --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.2);
+    --sh-md: 0 8px 20px -6px rgba(0, 0, 0, 0.5), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+    --sh-lg: 0 28px 56px -12px rgba(0, 0, 0, 0.65), 0 8px 16px -8px rgba(0, 0, 0, 0.4);
+    color-scheme: dark;
+  }
+}

@@ -10,6 +10,9 @@ export async function runSetup() {
   let msg = "ok";
   try {
     await sql.unsafe(schemaSql);
+    // Mark the baseline as applied, so `npm run db:migrate` and the live build only run newer changes
+    await sql`create table if not exists schema_migrations (name text primary key, applied_at timestamptz not null default now())`;
+    await sql`insert into schema_migrations (name) values ('0001_baseline') on conflict do nothing`;
     const [{ n }] = await sql<{ n: number }[]>`select count(*)::int as n from employees`;
     if (n === 0) await sql.unsafe(seedSql); // only on a brand new database, so deleted people don't come back
   } catch (e: any) {

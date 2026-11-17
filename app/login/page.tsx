@@ -1,10 +1,11 @@
 import { redirect } from "next/navigation";
-import { getUser } from "@/lib/auth";
+import { getUser, demoMode } from "@/lib/auth";
 import LoginCard from "./LoginCard";
 
 export const dynamic = "force-dynamic";
+export const metadata = { title: "Sign in" };
 
 export default async function Login() {
   if (await getUser()) redirect("/"); // already signed in: straight to the timesheet
-  return <LoginCard />;
+  return <LoginCard demo={demoMode} />;
 }

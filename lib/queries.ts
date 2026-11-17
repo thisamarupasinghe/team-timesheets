@@ -53,15 +53,6 @@ export async function allWorklogs(start: string, end: string) {
 }
 
 /** Jira people who logged time but are not linked to anyone on the roster */
-export async function unmatched(start: string, end: string) {
-  return sql<{ author_id: string; name: string | null; secs: number; n: number }[]>`
-    select w.author_id, max(w.author_name) as name, round(sum(w.hours) * 3600)::int as secs, count(*)::int as n
-    from worklogs w
-    where w.day between ${start}::date and ${end}::date
-      and not exists (select 1 from employees e where w.author_id = any(e.jira_ids))
-    group by 1 order by 3 desc`;
-}
-
 export async function leaveIn(start: string, end: string, employeeId?: number) {
   return sql<{ employee_id: number; day: string; hours: number; note: string | null }[]>`
     select employee_id, to_char(day, 'YYYY-MM-DD') as day, hours::float as hours, note from leave

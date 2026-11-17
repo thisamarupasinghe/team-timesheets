@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Black-and-white theme. Loaded last, so it overrides the teal look without
+   touching the other stylesheets: remove its import in app/layout.tsx to go back.
+   Chrome (sidebar, buttons, cards, headers, hours shading) is black, white and
+   grey; colour stays only where it carries meaning (utilisation bands, missing
+   days, leave, holidays, chart lines).
+   ========================================================================== */
+
+/* ---------- Light ---------- */
+:root {
+  --bg: #f5f5f4; --surface: #ffffff; --surface-2: #f3f3f2; --surface-3: #e8e8e6; --surface-hover: #f6f6f5;
+  --overlay: rgba(0, 0, 0, 0.4);
+  --border: #e3e3e1; --border-strong: #cfcfcc;
+  --fg: #111111; --fg-2: #262626; --muted: #4a4a4a; --faint: #5e5e5e;
+  --accent: #111111; --accent-hover: #333333; --accent-fg: #ffffff;
+  --accent-soft: #efefee; --accent-soft-2: #dddddb; --accent-ink: #111111; --accent-bright: #111111;
+  --ring: rgba(0, 0, 0, 0.22);
+  --sb-bg: #ffffff; --sb-fg: #111111; --sb-text: #262626; --sb-muted: #5e5e5e;
+  --sb-hover: #f2f2f1; --sb-active-bg: #ececea; --sb-active-fg: #111111; --sb-accent: #111111; --sb-border: #e3e3e1;
+  --weekend: #f4f4f3;
+  --heat-1: #f0f0ef; --heat-2: #dcdcda; --heat-3: #bfbfbc; --heat-4: #94948f;
+  --sh-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sh-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.03);
+  --sh-md: 0 6px 16px -4px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+  --sh-lg: 0 24px 48px -12px rgba(0, 0, 0, 0.18), 0 6px 14px -6px rgba(0, 0, 0, 0.08);
+}
+
+/* ---------- Dark (explicit choice, and the no-JS fallback) ---------- */
+:root[data-theme="dark"] {
+  --bg: #0c0c0c; --surface: #151515; --surface-2: #1b1b1b; --surface-3: #242424; --surface-hover: #1d1d1d;
+  --overlay: rgba(0, 0, 0, 0.65);
+  --border: #262626; --border-strong: #363636;
+  --fg: #ededed; --fg-2: #d2d2d2; --muted: #a6a6a6; --faint: #909090;
+  --accent: #f0f0f0; --accent-hover: #ffffff; --accent-fg: #111111;
+  --accent-soft: #262626; --accent-soft-2: #333333; --accent-ink: #f5f5f5; --accent-bright: #f0f0f0;
+  --ring: rgba(255, 255, 255, 0.3);
+  --sb-bg: #111111; --sb-fg: #f2f2f2; --sb-text: #d4d4d4; --sb-muted: #9a9a9a;
+  --sb-hover: rgba(255, 255, 255, 0.06); --sb-active-bg: rgba(255, 255, 255, 0.1); --sb-active-fg: #ffffff; --sb-accent: #ffffff; --sb-border: #232323;
+  --weekend: #101010;
+  --heat-1: #1f1f1f; --heat-2: #2e2e2e; --heat-3: #4a4a4a; --heat-4: #8c8c8c;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    --bg: #0c0c0c; --surface: #151515; --surface-2: #1b1b1b; --surface-3: #242424; --surface-hover: #1d1d1d;
+    --overlay: rgba(0, 0, 0, 0.65);
+    --border: #262626; --border-strong: #363636;
+    --fg: #ededed; --fg-2: #d2d2d2; --muted: #a6a6a6; --faint: #909090;
+    --accent: #f0f0f0; --accent-hover: #ffffff; --accent-fg: #111111;
+    --accent-soft: #262626; --accent-soft-2: #333333; --accent-ink: #f5f5f5; --accent-bright: #f0f0f0;
+    --ring: rgba(255, 255, 255, 0.3);
+    --sb-bg: #111111; --sb-fg: #f2f2f2; --sb-text: #d4d4d4; --sb-muted: #9a9a9a;
+    --sb-hover: rgba(255, 255, 255, 0.06); --sb-active-bg: rgba(255, 255, 255, 0.1); --sb-active-fg: #ffffff; --sb-accent: #ffffff; --sb-border: #232323;
+    --weekend: #101010;
+    --heat-1: #1f1f1f; --heat-2: #2e2e2e; --heat-3: #4a4a4a; --heat-4: #8c8c8c;
+  }
+}
+
+/* ---------- Plain page background, flat buttons and cards ---------- */
+:root[data-theme="light"] body, :root[data-theme="dark"] body { background: var(--bg); }
+:root[data-theme="light"] .btn-primary, :root[data-theme="dark"] .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+:root[data-theme="light"] .btn-primary:hover, :root[data-theme="dark"] .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-fg); }
+:root[data-theme="light"] .topbar { background: color-mix(in srgb, #ffffff 82%, transparent); }
+:root[data-theme="dark"] .topbar { background: color-mix(in srgb, #0c0c0c 82%, transparent); }
+:root[data-theme="light"] .card { box-shadow: var(--sh-xs); }
+:root[data-theme="dark"] .card { box-shadow: none; }
+
+/* ---------- Sidebar ---------- */
+.sidebar .btn:focus-visible { box-shadow: 0 0 0 3px var(--ring); }
+.sidebar .dot-badge { box-shadow: 0 0 0 2px var(--sb-bg); }
+.sidebar .brand-mark { box-shadow: 0 0 0 1px var(--sb-border); }
+
+/* ---------- Page header band: plain header on the page, no dark teal band ---------- */
+.hero { background: transparent; color: var(--fg); box-shadow: none; padding: 0; border-radius: 0; }
+.hero::before { display: none; }
+:root[data-theme="dark"] .hero { box-shadow: none; }
+.hero .page-title { color: var(--fg); }
+.hero .page-sub, .hero .page-sub .mono, .hero .page-sub .muted { color: var(--muted); }
+.hero .seg { background: var(--surface-3); border-color: var(--border); }
+.hero .seg a, .hero .seg button { color: var(--muted); }
+.hero .seg a:hover, .hero .seg button:hover { color: var(--fg); }
+.hero .seg .on { background: var(--surface); color: var(--fg); box-shadow: var(--sh-sm); }
+.hero .seg .count { color: var(--faint); }
+.hero .seg .on .count { color: var(--muted); }
+.hero .period-label b { color: var(--fg); }
+.hero .period-label > span { color: var(--muted); }
+.hero .period-back { color: var(--fg-2); }
+.hero .btn { background: var(--surface); border-color: var(--border-strong); color: var(--fg); box-shadow: var(--sh-xs); }
+.hero .btn:hover { background: var(--surface-hover); border-color: var(--border-strong); color: var(--fg); }
+.hero .btn-ghost { background: transparent; border-color: transparent; color: var(--fg-2); box-shadow: none; }
+.hero .btn-ghost:hover { background: var(--surface-2); color: var(--fg); }
+.hero .btn:focus-visible, .hero a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; box-shadow: none; }
+.hero .period-range { background: var(--surface); border-color: var(--border); color: var(--fg-2); }
+.hero .period-range .muted { color: var(--muted); }
+:root .hero .btn-primary, :root .hero .period-range .btn-primary { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+:root .hero .btn-primary:hover, :root .hero .period-range .btn-primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); color: var(--accent-fg); }
+.hero .crumbs, .hero .crumbs a, .hero .crumbs svg { color: var(--muted); }
+.hero .crumbs a:hover, .hero .crumbs [aria-current="page"] { color: var(--fg); }
+.hero .badge.outline { background: transparent; border-color: var(--border-strong); color: var(--muted); }
+.hero .badge.warning { background: var(--b1-bg); color: var(--b1); }
+.hero .badge.danger { background: var(--b0-bg); color: var(--b0); }
+.hero .page-title .avatar { box-shadow: inset 0 0 0 1px var(--border-strong); background: var(--surface-2); }
+
+/* ---------- KPI tiles and cards: no teal stripes or tinted icons ---------- */
+.stat::after, .teams-card::after, .myweek::after { display: none; }
+:root[data-theme="light"] .stat-icon:not(.warn), :root[data-theme="dark"] .stat-icon:not(.warn) {
+  background: var(--surface-2); color: var(--fg); box-shadow: inset 0 0 0 1px var(--border);
+}
+/* Full days are mid grey in dark mode: light text reads better than the old dark-on-cyan */
+:root[data-theme="dark"] .tgrid td.day.h4 .dc,
+:root[data-theme="dark"] .cal-day.h4, :root[data-theme="dark"] .cal-day.h4 .cal-date,
+:root[data-theme="dark"] .cal-day.h4 .cal-meta, :root[data-theme="dark"] .cal-day.h4 .cal-hours { color: #0c0c0c; }
+
+/* ---------- Sign-in screen: black, white and grey ---------- */
+.lg {
+  background:
+    radial-gradient(ellipse 70% 55% at 25% 20%, rgba(255, 255, 255, 0.07), transparent 70%),
+    radial-gradient(ellipse 55% 60% at 85% 85%, rgba(255, 255, 255, 0.05), transparent 70%),
+    linear-gradient(180deg, #111111, #050505);
+}
+.lg-cube i { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35); }
+.lg-cube .f1 { background: #e6e6e6; }
+.lg-cube .f2 { background: #555555; }
+.lg-cube .f3, .lg-cube .f4 { background: #9a9a9a; }
+.lg-cube .f5 { background: #ffffff; }
+.lg-cube .f6 { background: #3a3a3a; }
+.lg-h1 span { background: linear-gradient(120deg, #ffffff, #9e9e9e); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.lg-sub { color: #b5b5b5; }
+.lg-note { background: rgba(255, 255, 255, 0.07); border-color: rgba(255, 255, 255, 0.2); color: #eeeeee; }
+.lg-google:hover { background: #f0f0f0; }
+.lg-google:focus-visible { outline-color: #ffffff; }
+.lg-google .spinner { color: #111111; }
+.lg-fine { color: #8f8f8f; }

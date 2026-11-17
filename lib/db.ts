@@ -7,8 +7,8 @@ declare global {
 
 export const sql =
   global.__sql ??
-  postgres(process.env.DATABASE_URL || "postgres://localhost/timesheets", {
-    max: 5,
+  postgres(process.env.DATABASE_URL || "postgres://localhost/tt", {
+    max: Number(process.env.DB_POOL) || 5,
     idle_timeout: 20,
     onnotice: () => {},
     types: { bigint: postgres.BigInt },

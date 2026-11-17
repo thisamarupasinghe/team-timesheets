@@ -2,11 +2,23 @@ import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { logLogin } from "./audit";
 
 export const authDisabled = process.env.AUTH_DISABLED === "1";
-/** DEMO=1: a public, read-only showcase with fictional data. No sign-in; everyone is a viewer and nothing can be changed. */
+/** DEMO=1: the public showcase. Sign-in is a button that signs you in as a fictional read-only viewer (no Google, no passwords). */
 export const demoMode = process.env.DEMO === "1";
+export const DEMO_COOKIE = "tt-demo";
+export const DEMO_EMAIL = "jordan.blake@example.com";
+export const PREVIEW_ROLE_COOKIE = "tt-preview-role";
+export const PREVIEW_PERSON_COOKIE = "tt-preview-person";
+
+/** Local only (sign-in off): preview the site as a roster person, so their "Your week" card shows. Always null on the live site. */
+export async function previewPersonId(): Promise<number | null> {
+  if (!authDisabled) return null;
+  const v = Number((await cookies()).get(PREVIEW_PERSON_COOKIE)?.value);
+  return Number.isInteger(v) && v > 0 ? v : null;
+}
 
 /**
  * Roles
@@ -58,15 +70,19 @@ export const authOptions: NextAuthOptions = {
 
 /** The signed-in user and their role, or null. Re-checked on every request, so removing someone takes effect at once. */
 export async function getUser(): Promise<User | null> {
-  if (demoMode) return { email: "demo@example.com", role: "viewer" };
-  if (authDisabled) return { email: "local-dev", role: "admin" };
+  if (demoMode) return (await cookies()).get(DEMO_COOKIE)?.value === "1" ? { email: DEMO_EMAIL, role: "viewer" } : null;
+  if (authDisabled) {
+    // Local only (sign-in off): the account menu can preview the site as a manager or viewer
+    const r = (await cookies()).get(PREVIEW_ROLE_COOKIE)?.value;
+    return { email: "local-dev", role: r === "manager" || r === "viewer" ? r : "admin" };
+  }
   const s = await getServerSession(authOptions);
   const email = s?.user?.email?.toLowerCase();
   const role = roleOf(email);
   return email && role ? { email, role } : null;
 }
 
-/** Any signed-in the team user (viewer, manager or admin). */
+/** Any signed-in company user (viewer, manager or admin). */
 export async function requireUser(): Promise<User> {
   const u = await getUser();
   if (!u) redirect("/login");
